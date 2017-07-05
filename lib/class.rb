@@ -1,21 +1,25 @@
 require 'csv'
 
 class Sales
-	@@allsales=[]
-	@@searcharray=[]
+
+
+	def initialize()
+		@allsales=[]
+		@searcharray=[]
+	end
 
 	#create array from all the file rows
 	def get_allsales()
 		CSV.foreach('sales.csv') do |row|
-			@@allsales.push(row)
+			@allsales.push(row)
 		end
 	end
 	#search through all sales to get row with the sku
 	def search(sku)
-		@@allsales.each() do |row|
+		@allsales.each() do |row|
 			#row=["Nairobi", DM1759, "6900 KSH"]
 			if row[1].eql?(sku)
-				@@searcharray.push(row)
+				@searcharray.push(row)
 			end
 		end
 	end
@@ -26,7 +30,8 @@ class Sales
 		@totalsales=0
 		@highestvalue=0
 		@highsellingstore=""
-		@@searcharray.each() do |storesale|
+		@highestsale=0
+		@searcharray.each() do |storesale|
 			#storesale=["Nairobi", "DM1000","70000      KSH"]
 			#sub any extra space
 			salevalue=(storesale[2].gsub(/\s+/, " ").split(" "))[0].to_i
@@ -35,12 +40,13 @@ class Sales
 			if salevalue>@highestvalue
 				@highestvalue=salevalue
 				@highsellingstore=storesale[0]
+				@highestsale=storesale[2]
 			end
 		end
 		#to return value in hash
 		saleshash=Hash.new()
 		saleshash.store("total_KSH", @totalsales)
-		
+
 		#highest selling store and selling value
 		secondhash=Hash.new()
 		secondhash.store("topstore",@highsellingstore)
@@ -48,8 +54,7 @@ class Sales
 		finalhash=Hash.new()
 		finalhash.store("firsthash",saleshash)
 		finalhash.store("secondhash",secondhash)
-
+		finalhash.store("highestsale",@highestsale)
 		finalhash
 	end
 end
-

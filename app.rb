@@ -13,5 +13,6 @@ post ('/') do
 	myhash=sales.getFinalResults(@sku)
 	@totalsale=myhash.fetch("firsthash").fetch("total_KSH")
 	@topstore=myhash.fetch("secondhash").fetch("topstore")
+	@highestsale=myhash.fetch("highestsale")
 	erb(:index)
 end
